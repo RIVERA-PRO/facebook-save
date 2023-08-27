@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         margin: 10,
         alignItems: 'center',
-
+        paddingTop: 20
     },
     recordContainer: {
         backgroundColor: 'rgba(36, 116, 225,0.1)',

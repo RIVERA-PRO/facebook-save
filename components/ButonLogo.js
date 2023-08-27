@@ -60,13 +60,14 @@ export default function ButonLogo() {
                         <TouchableWithoutFeedback onPress={toggleModal} style={styles.modalClose}>
                             <AntDesign name="arrowleft" size={24} color="#fff" />
                         </TouchableWithoutFeedback>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Ingrese la palabra clave"
+                            value={inputValue}
+                            onChangeText={handleInputChange}
+                        />
                     </View>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ingrese la palabra clave"
-                        value={inputValue}
-                        onChangeText={handleInputChange}
-                    />
+
                     {inputValue === 'Admin' ? <AllCuentasServer /> : <AllCuentas />}
                 </ScrollView>
             </Modal>
@@ -86,20 +87,24 @@ const styles = StyleSheet.create({
     input: {
         margin: 10,
         height: 40,
-        backgroundColor: 'rgba(36, 116, 225,0.1)',
+        backgroundColor: 'rgba(255, 255, 255,0.9)',
         marginVertical: 10,
         paddingHorizontal: 10,
-        borderRadius: 10
+        borderRadius: 10,
+        width: '90%'
     },
     modalContent: {
         backgroundColor: '#fff',
         borderRadius: 10,
         elevation: 5,
+
     },
     deFlexHeader: {
         backgroundColor: '#2474e1',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 20,
+        paddingHorizontal: 10,
+        alignItems: 'center',
+        paddingVertical: 8,
+
     },
 });

@@ -59,11 +59,12 @@ export default function AllCuentasServer() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Usuarios registrados</Text>
+
             {loading ? (
                 <ActivityIndicator style={styles.loader} size="large" color="#0000ff" />
             ) : (
                 <ScrollView>
+                    <Text style={styles.title}>{users.length} Usuarios registrados</Text>
                     {users.map((user, index) => (
                         <View key={index} style={styles.userContainer}>
                             <View style={styles.deFlex}>
@@ -90,7 +91,7 @@ export default function AllCuentasServer() {
 
 const styles = StyleSheet.create({
     container: {
-
+        paddingTop: 20
 
     },
     loader: {

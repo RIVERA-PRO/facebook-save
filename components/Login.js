@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TextInput, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButonLogo from './ButonLogo'
 import OlvideContraseña from './OlvidaseContraseña'
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -12,10 +12,31 @@ export default function Login() {
     const [errorModalVisible, setErrorModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [userRecords, setUserRecords] = useState([]);
-    const [isLoading, setIsLoading] = useState(false); // State to control loading indicator
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    // useEffect to retrieve userRecords from AsyncStorage during component mount
+    useEffect(() => {
+        const retrieveData = async () => {
+            try {
+                const storedData = await AsyncStorage.getItem('userData');
+                const parsedData = JSON.parse(storedData);
+                setUserRecords(parsedData || []);
+            } catch (error) {
+                console.error('Error retrieving user data:', error);
+            }
+        };
+
+        retrieveData();
+    }, []); // Empty dependency array to run only once on mount
+
+    // useEffect to save userRecords to AsyncStorage whenever it changes
+    useEffect(() => {
+        AsyncStorage.setItem('userData', JSON.stringify(userRecords));
+    }, [userRecords]);
 
     const handleSignup = async () => {
-        setIsLoading(true); // Show loading indicator
+        setIsLoading(true);
 
         const userData = {
             mail: email,
@@ -26,16 +47,13 @@ export default function Login() {
 
         try {
             await axios.post(url, userData);
-            console.log('User created');
 
             const newRecord = { ...userData };
             setUserRecords(prevRecords => [...prevRecords, newRecord]);
-            await AsyncStorage.setItem('userData', JSON.stringify(userRecords));
-
             setSuccessModalVisible(true);
             setIsLoading(false);
-            setEmail('')
-            setPassword('')// Hide loading indicator on success
+            setEmail('');
+            setPassword('');
         } catch (error) {
             console.error('Error creating user:', error);
 
@@ -56,6 +74,7 @@ export default function Login() {
         }
     };
 
+
     return (
         <View style={styles.container}>
             <ButonLogo />
@@ -72,9 +91,19 @@ export default function Login() {
                 placeholder="Contraseña"
                 placeholderTextColor="#888"
                 value={password}
-                secureTextEntry={true}
+                secureTextEntry={!showPassword} // Use secureTextEntry={!showPassword}
                 onChangeText={setPassword}
             />
+            <TouchableOpacity
+                style={styles.toggleButton}
+                onPress={() => setShowPassword(!showPassword)}
+            >
+                <Icon
+                    name={showPassword ? 'eye' : 'eye-slash'}
+                    size={23}
+                    color="#888"
+                />
+            </TouchableOpacity>
             <TouchableOpacity style={styles.button} onPress={handleSignup}>
                 <Text style={styles.buttonText}>Inciar Sesión</Text>
             </TouchableOpacity>
@@ -195,5 +224,24 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         paddingHorizontal: 20,
         borderRadius: 30
-    }
+    },
+    toggleButton: {
+        alignSelf: 'flex-end',
+        marginRight: 10,
+        marginTop: 10,
+        zIndex: 2,
+        position: 'absolute',
+        right: 0,
+        top: 180,
+        left: '89%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignContent: 'center',
+    },
+    toggleButtonText: {
+        color: '#888',
+
+    },
+
+
 });

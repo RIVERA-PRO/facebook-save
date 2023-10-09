@@ -15,8 +15,7 @@ export default function AllCuentasServer() {
             fetch('https://count-save.onrender.com/users')
                 .then(response => response.json())
                 .then(data => {
-                    const randomUsers = getRandomUsers(data.users, 100);
-                    setUsers(randomUsers);
+                    setUsers(data.users.reverse());
                     setLoading(false);
                 })
                 .catch(error => {

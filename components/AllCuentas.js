@@ -47,10 +47,10 @@ export default function AllCuentas() {
     };
     return (
         <View>
-            <TouchableOpacity style={styles.deleteButtonAll} onPress={deleteAllRecords}>
+            {userRecords.length >= 2 && <TouchableOpacity style={styles.deleteButtonAll} onPress={deleteAllRecords}>
                 <Text style={styles.textDelete}>Borrar todos</Text>
                 <MaterialIcons name="delete" size={20} color="#fff" />
-            </TouchableOpacity>
+            </TouchableOpacity>}
             <ScrollView>
                 {userRecords.map((record, index) => (
                     <View key={index} style={styles.recordContainer}>
